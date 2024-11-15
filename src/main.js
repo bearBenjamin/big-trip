@@ -7,15 +7,13 @@ import taskModelDescriptions from './model/task-model-description';
 
 const header = document.querySelector('.page-header');
 const headerFilter = header.querySelector('.trip-controls__filters');
-const buttonNewEvent = header.querySelector('.trip-main__event-add-btn');
-
 const sortDetailsTrip = document.querySelector('.trip-events');
 
 const points = new TaskModelPoint();
 const descriptions = new taskModelDescriptions();
+const formCreatingNewPoint = new FormCreatingNewPointPresenter(sortDetailsTrip, points, descriptions);
 
 render(new FiltersFormView(), headerFilter);
 render (new SortFormView (), sortDetailsTrip);
 
-const formCreatingNewPoint = new FormCreatingNewPointPresenter();
-formCreatingNewPoint.init(sortDetailsTrip, points, descriptions, buttonNewEvent);
+formCreatingNewPoint.init();

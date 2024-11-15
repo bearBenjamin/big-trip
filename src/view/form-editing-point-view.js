@@ -94,8 +94,7 @@ const createFormEditingPointTemplate = (point, descriptions) => {
 
   const itemDescription = getDescriptions();
 
-  return `
-  <li class="trip-events__item">
+  return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
   <header class="event__header">
   <div class="event__type-wrapper">
@@ -201,24 +200,31 @@ const createFormEditingPointTemplate = (point, descriptions) => {
 };
 
 export default class FormEditingPointView {
+  #element = null;
+  #point = null;
+  #descriptions = null;
+
   constructor(point, descriptions) {
-    this.point = point;
-    this.descriptions = descriptions;
+    this.#point = point;
+    this.#descriptions = descriptions;
   }
 
-  getTemplate () {
-    return createFormEditingPointTemplate(this.point, this.descriptions);
+  get template () {
+    return createFormEditingPointTemplate(this.#point, this.#descriptions);
   }
 
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element () {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement () {
-    this.element = null;
+    this.#element = null;
   }
 }
+
+{/* <li class="trip-events__item">
+</li> */}

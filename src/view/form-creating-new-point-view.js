@@ -191,23 +191,26 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
 };
 
 export default class FormCreatingNewPointView {
+  #element = null;
+  #description = null;
+
   constructor(description) {
-    this.description = description;
+    this.#description = description;
   }
 
-  getTemplate () {
-    return createFormCreatingNewPointTemplate(this.description);
+  get template () {
+    return createFormCreatingNewPointTemplate(this.#description);
   }
 
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element () {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement () {
-    this.element = null;
+    this.#element = null;
   }
 }

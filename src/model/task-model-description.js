@@ -1,7 +1,9 @@
 import { generateDescription } from '../mock/data';
 
 export default class taskModelDescriptions {
-  description = generateDescription();
+  #description = generateDescription();
 
-  getDescriptions = () => this.description;
+  get descriptions() {
+    return this.#description;
+  }
 }

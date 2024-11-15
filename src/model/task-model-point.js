@@ -1,7 +1,9 @@
 import { generatePoint } from '../mock/data.js';
 
 export default class TaskModelPoint {
-  points = Array.from({length: 3}, generatePoint);
+  #points = Array.from({length: 10}, generatePoint);
 
-  getPoints = () => this.points;
+  get points () {
+    return this.#points;
+  }
 }

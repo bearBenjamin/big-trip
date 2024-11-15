@@ -1,12 +1,12 @@
 import {createElement} from '../render.js';
 
-const createListEventTripTemplate = () => '<ul class="trip-events__list"></ul>';
+const createMessageFirstPointTemplate = () => '<p class="trip-events__msg">Click New Event to create your first point</p>';
 
-export default class ListEventTripView {
+export default class MessageFirstPointView {
   #element = null;
 
   get template () {
-    return createListEventTripTemplate();
+    return createMessageFirstPointTemplate();
   }
 
   get element () {
