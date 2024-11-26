@@ -1,21 +1,21 @@
+import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/data.js';
-import {createElement} from '../render.js';
+
+const POINT = {
+  basePrice: '',
+  dateFrom: '',
+  dateTo: '',
+  destination: '',
+  id: '',
+  isFavorite: '',
+  type: 'transport',
+  offers: []
+};
 
 const createFormCreatingNewPointTemplate = (descriptions) => {
 
-  const point = {
-    basePrice: '',
-    dateFrom: '',
-    dateTo: '',
-    destination: '',
-    id: '',
-    isFavorite: '',
-    type: 'transport',
-    offers: []
-  };
-
   const getOffers = () => {
-    const offersByType = generateOffers(point.type);
+    const offersByType = generateOffers(POINT.type);
     const resultOffers = [];
 
     if (offersByType.length === 0) {
@@ -52,12 +52,12 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
     const description = [];
     const photos = [];
 
-    if (point.destination === '') {
+    if (POINT.destination === '') {
       return '';
     }
 
     descriptions.forEach((element) => {
-      if (element.name === point.destination) {
+      if (element.name === POINT.destination) {
         const item = `<p class="event__destination-description">${element.description}</p>`;
         description.push(item);
         if (element.pictures.length !== 0) {
@@ -92,7 +92,7 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
   <div class="event__type-wrapper">
   <label class="event__type  event__type-btn" for="event-type-toggle-1">
   <span class="visually-hidden">Choose event type</span>
-  <img class="event__type-icon" width="17" height="17" src="img/icons/${point.type}.png" alt="Event type icon">
+  <img class="event__type-icon" width="17" height="17" src="img/icons/${POINT.type}.png" alt="Event type icon">
   </label>
   <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -150,9 +150,9 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
 
   <div class="event__field-group  event__field-group--destination">
   <label class="event__label  event__type-output" for="event-destination-1">
-  ${point.type}
+  ${POINT.type}
   </label>
-  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${point.destination}" list="destination-list-1">
+  <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${POINT.destination}" list="destination-list-1">
   <datalist id="destination-list-1">
   <option value="Amsterdam"></option>
   <option value="Geneva"></option>
@@ -162,10 +162,10 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
 
   <div class="event__field-group  event__field-group--time">
   <label class="visually-hidden" for="event-start-time-1">From</label>
-  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${point.dateFrom}">
+  <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${POINT.dateFrom}">
   &mdash;
   <label class="visually-hidden" for="event-end-time-1">To</label>
-  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${point.dateTo}">
+  <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${POINT.dateTo}">
   </div>
 
   <div class="event__field-group  event__field-group--price">
@@ -173,7 +173,7 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
   <span class="visually-hidden">Price</span>
   &euro;
   </label>
-  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${point.basePrice}">
+  <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${POINT.basePrice}">
   </div>
 
   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -190,11 +190,11 @@ const createFormCreatingNewPointTemplate = (descriptions) => {
           </li>`;
 };
 
-export default class FormCreatingNewPointView {
-  #element = null;
+export default class FormCreatingNewPointView extends AbstractView {
   #description = null;
 
   constructor(description) {
+    super();
     this.#description = description;
   }
 
@@ -202,15 +202,23 @@ export default class FormCreatingNewPointView {
     return createFormCreatingNewPointTemplate(this.#description);
   }
 
-  get element () {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormCreatingSubmitHandler = (callback) => {
+    this._callback.formCreatingSubmitHandler = callback;
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formCreatingSubmitHandler);
+  };
 
-    return this.#element;
-  }
+  #formCreatingSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formCreatingSubmitHandler();
+  };
 
-  removeElement () {
-    this.#element = null;
-  }
+  setButtonChancelClickHandler = (callback) => {
+    this._callback.buttonChancelClickHandler = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#buttonChancelClickHandler);
+  };
+
+  #buttonChancelClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonChancelClickHandler();
+  };
 }

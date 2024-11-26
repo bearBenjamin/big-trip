@@ -1,4 +1,4 @@
-import {render} from './render';
+import {render} from './framework/render';
 import FiltersFormView from './view/form-filters-view';
 import SortFormView from './view/form-sort-view';
 import FormCreatingNewPointPresenter from './presenter/form-creating-new-point-presenter';
@@ -11,9 +11,9 @@ const sortDetailsTrip = document.querySelector('.trip-events');
 
 const points = new TaskModelPoint();
 const descriptions = new taskModelDescriptions();
-const formCreatingNewPoint = new FormCreatingNewPointPresenter(sortDetailsTrip, points, descriptions);
+const formCreatingNewPointPresenter = new FormCreatingNewPointPresenter(sortDetailsTrip, points, descriptions);
 
 render(new FiltersFormView(), headerFilter);
 render (new SortFormView (), sortDetailsTrip);
 
-formCreatingNewPoint.init();
+formCreatingNewPointPresenter.init();

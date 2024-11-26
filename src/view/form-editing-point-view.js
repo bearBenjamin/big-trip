@@ -1,5 +1,5 @@
+import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/data.js';
-import {createElement} from '../render.js';
 import { getOffer, showDateFormEditing } from '../util.js';
 
 const createFormEditingPointTemplate = (point, descriptions) => {
@@ -199,12 +199,12 @@ const createFormEditingPointTemplate = (point, descriptions) => {
   </li>`;
 };
 
-export default class FormEditingPointView {
-  #element = null;
+export default class FormEditingPointView extends AbstractView {
   #point = null;
   #descriptions = null;
 
   constructor(point, descriptions) {
+    super();
     this.#point = point;
     this.#descriptions = descriptions;
   }
@@ -213,18 +213,33 @@ export default class FormEditingPointView {
     return createFormEditingPointTemplate(this.#point, this.#descriptions);
   }
 
-  get element () {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setFormEditingSubmitHandler = (callback) => {
+    this._callback.formEditingSubmitHandler = callback;
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#formEditingSubmitHandler);
+  };
 
-    return this.#element;
-  }
+  #formEditingSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formEditingSubmitHandler();
+  };
 
-  removeElement () {
-    this.#element = null;
-  }
+  setButtonCloseClickHandler = (callback) => {
+    this._callback.buttonCloseClickHandler = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonCloseClickHandler);
+  };
+
+  #buttonCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonCloseClickHandler();
+  };
+
+  setButtonDeleteClickHandler = (callback) => {
+    this._callback.buttonDeleteClickHandler = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#buttonDeleteClickHandler);
+  };
+
+  #buttonDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonDeleteClickHandler();
+  };
 }
-
-{/* <li class="trip-events__item">
-</li> */}

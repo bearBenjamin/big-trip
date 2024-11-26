@@ -1,26 +1,27 @@
-import { render } from '../render';
+import { render, remove } from '../framework/render';
 import ListEventTripView from '../view/list-event-trip-view';
 import FormCreatingNewPointView from '../view/form-creating-new-point-view';
 import PointEventTripView from '../view/point-event-trip-view';
 import FormEditingPointView from '../view/form-editing-point-view';
 import { isEscapeKey } from '../util';
 import MessageFirstPointView from '../view/show-everthing-view';
+import AbstractView from '../framework/view/abstract-view';
 
 const buttonNewEvent = document.querySelector('.trip-main__event-add-btn');
 
-export default class FormCreatingNewPointPresenter {
+export default class FormCreatingNewPointPresenter extends AbstractView {
   #container = null;
   #points = null;
   #descriptions = null;
   #pointsTask = null;
   #descriptionsTask = null;
-  //#buttonNewEvent = document.querySelector('.trip-main__event-add-btn');
   #formCreatingNewPoint = null;
 
   #listEventTrip = new ListEventTripView();
   #messageFirstPoint = new MessageFirstPointView();
 
   constructor (container, points, descriptions) {
+    super();
     this.#container = container;
     this.#points = points;
     this.#descriptions = descriptions;
@@ -51,9 +52,7 @@ export default class FormCreatingNewPointPresenter {
   #renderPoint(point, descriptions) {
     const pointEvent = new PointEventTripView(point);
 
-    const buttonChange = pointEvent.element.querySelector('.event__rollup-btn');
-
-    buttonChange.addEventListener('click', () => {
+    pointEvent.setButtonChangeClickHandler(() => {
       this.#renderEditingFormPoint(point, descriptions, pointEvent);
     });
 
@@ -62,9 +61,6 @@ export default class FormCreatingNewPointPresenter {
 
   #renderEditingFormPoint(point, descriptions, pointEvent) {
     const pointEditing = new FormEditingPointView(point, descriptions);
-    const form = pointEditing.element.querySelector('.event--edit');
-    const buttonClose = pointEditing.element.querySelector('.event__rollup-btn');
-    const buttonDelete = pointEditing.element.querySelector('.event__reset-btn');
 
     this.#listEventTrip.element.replaceChild(pointEditing.element, pointEvent.element);
 
@@ -77,24 +73,26 @@ export default class FormCreatingNewPointPresenter {
     };
 
     function hideOnEscButtonEditingPoint() {
-      return document.removeEventListener('keydown', onEscButtonEditingPoint);
+      document.removeEventListener('keydown', onEscButtonEditingPoint);
     }
 
-    form.addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    pointEditing.setFormEditingSubmitHandler(() => {
       this.#replaceFormEditingToPoint(pointEvent, pointEditing);
       hideOnEscButtonEditingPoint();
+      remove(pointEditing);
     });
 
-    buttonClose.addEventListener('click', () => {
+    pointEditing.setButtonCloseClickHandler(() => {
       this.#replaceFormEditingToPoint(pointEvent, pointEditing);
       hideOnEscButtonEditingPoint();
+      remove(pointEditing);
     });
 
-    buttonDelete.addEventListener('click', () => {
+    pointEditing.setButtonDeleteClickHandler(() => {
       this.#replaceFormEditingToPoint(pointEvent, pointEditing);
       hideOnEscButtonEditingPoint();
-      pointEvent.element.remove();
+      remove(pointEditing);
+      remove(pointEvent);
     });
 
     document.addEventListener('keydown', onEscButtonEditingPoint);
@@ -114,24 +112,20 @@ export default class FormCreatingNewPointPresenter {
 
       document.addEventListener('keydown', this.#onEscButtonCreatingNewPoint);
 
-      const form = this.#formCreatingNewPoint.element.querySelector('.event--edit');
-
-      form.addEventListener('submit', (evt) => {
-        evt.preventDefault();
-        render(new PointEventTripView(this.#pointsTask[0]), this.#listEventTrip.element);
+      this.#formCreatingNewPoint.setFormCreatingSubmitHandler(() => {
+        //render(new PointEventTripView(this.#pointsTask[0]), this.#listEventTrip.element);
         this.#hideCreatingNewPoint();
         this.#unBlockButtonCreatingNewPoint();
       });
 
-      const buttonChancel = form.querySelector('.event__reset-btn');
-
-      buttonChancel.addEventListener('click', () => {
+      this.#formCreatingNewPoint.setButtonChancelClickHandler(() => {
         this.#hideCreatingNewPoint();
         this.#unBlockButtonCreatingNewPoint();
       });
     });
   }
 
+  //добавляю форму создания новой точки первым элементом в список
   #addFormCreatingPoint(creatingForm) {
     this.#listEventTrip.element.prepend(creatingForm.element);
   }

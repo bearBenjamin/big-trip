@@ -1,5 +1,5 @@
+import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/data.js';
-import {createElement} from '../render.js';
 import { duration, getOffer, showDate, showMachineDate, showMachineTime, showTime } from '../util.js';
 
 const createPointEventTripTemplate = (point) => {
@@ -82,11 +82,11 @@ const createPointEventTripTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEventTripView {
-  #element = null;
+export default class PointEventTripView extends AbstractView {
   #point = null;
 
   constructor (point) {
+    super();
     this.#point = point;
 
   }
@@ -95,15 +95,14 @@ export default class PointEventTripView {
     return createPointEventTripTemplate(this.#point);
   }
 
-  get element () {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setButtonChangeClickHandler = (callback) => {
+    this._callback.buttonChangeClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#buttonChangeClickHandler);
+  };
 
-    return this.#element;
-  }
+  #buttonChangeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonChangeClick();
+  };
 
-  removeElement () {
-    this.#element = null;
-  }
 }
