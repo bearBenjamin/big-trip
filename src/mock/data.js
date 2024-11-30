@@ -1,8 +1,15 @@
-import { getRandomInteger, getRandomItemArray } from '../util';
+import { generateDate } from '../util/util';
+import { getRandomInteger, getRandomItemArray } from '../util/common';
 
 const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const DESTINATION = ['Chamonix', 'Amsterdam', 'Geneva'];
 const POINT_ID = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+
+const filterType = {
+  Everything: 'everything',
+  Future: 'future',
+  Past: 'past',
+};
 
 const DESCRIPTION = [
   {
@@ -161,8 +168,8 @@ const getTypeByOffersId = (item = offersByType) => {
 const generatePoint = () => {
   const item = {
     basePrice: getRandomInteger(10, 3000),
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: generateDate()[0]/*'2019-07-10T22:55:56.845Z'*/,
+    dateTo: generateDate()[1]/*'2019-07-11T11:22:13.375Z'*/,
     destination: getRandomItemArray(DESTINATION),
     id: getRandomItemArray(POINT_ID),
     isFavorite: getRandomInteger(0, 1),
@@ -186,4 +193,4 @@ const generateOffers = (item = 'bus') => {
   return [];
 };
 
-export { generatePoint, generateDescription, generateOffers, offersByType };
+export { generatePoint, generateDescription, generateOffers, offersByType, filterType };

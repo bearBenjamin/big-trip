@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/data.js';
-import { duration, getOffer, showDate, showMachineDate, showMachineTime, showTime } from '../util.js';
+import { duration, getOffer, showDate, showMachineDate, showMachineTime, showTime } from '../util/util.js';
 
 const createPointEventTripTemplate = (point) => {
   const { basePrice, destination, dateFrom, dateTo, isFavorite, type, offers } = point;
@@ -36,24 +36,21 @@ const createPointEventTripTemplate = (point) => {
   const listOffer = getOffers();
 
   const getFavorite = () => {
+    const favorite = {key: ''};
+
     if (isFavorite) {
-      return `<button class="event__favorite-btn event__favorite-btn--active" type="button">
+      favorite.key = '--active';
+    }
+
+    return `<button class="event__favorite-btn event__favorite-btn${favorite.key}" type="button">
               <span class="visually-hidden">Add to favorite</span>
               <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
               <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
               </svg>
               </button>`;
-    }
-
-    return `<button class="event__favorite-btn" type="button">
-            <span class="visually-hidden">Add to favorite</span>
-            <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-            </svg>
-            </button>`;
   };
 
-  const favorite = getFavorite();
+  const favoritePlus = getFavorite();
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -74,7 +71,7 @@ const createPointEventTripTemplate = (point) => {
   &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
   </p>
   ${listOffer}
-  ${favorite}
+  ${favoritePlus}
   <button class="event__rollup-btn" type="button">
   <span class="visually-hidden">Open event</span>
   </button>

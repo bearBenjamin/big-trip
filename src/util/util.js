@@ -1,25 +1,24 @@
 import dayjs from 'dayjs';
+import { getRandomInteger } from './common';
 
-const isEscapeKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.floor(lower + Math.random() * (upper - lower + 1));
-  return result;
-};
-
-const getRandomItemArray = (item) => {
-  const index = getRandomInteger(0, item.length - 1);
-  const result = item[index];
-  return result;
-};
 
 const showDate = (date) => dayjs(date).format('MMM DD');
 const showMachineDate = (date) => dayjs(date).format('YYYY-MM-DD');
 const showTime = (time) => dayjs(time).format('HH:mm');
 const showMachineTime = (dateTime) => dayjs(dateTime).format('YYYY-MM-DD[T]HH:mm');
 const showDateFormEditing = (date) => dayjs(date).format('DD/MM/YY HH:mm');
+
+const generateDate = () => {
+  const date1 = new Date(2024, getRandomInteger(0, 6), getRandomInteger(1, 30), getRandomInteger(0, 24), getRandomInteger(2, 59));
+  const date2 = new Date(2024, getRandomInteger(6, 11), getRandomInteger(1, 30), getRandomInteger(0, 24), getRandomInteger(2, 59));
+
+  //цикл проверки дат для моков, оказался не нужным;
+  // while (date1.getTime() < date2.getTime()) {
+  //   date2 = new Date(getRandomInteger(2022, 2024), getRandomInteger(0, 11), getRandomInteger(1, 30), getRandomInteger(0, 24), getRandomInteger(2, 59));
+  // }
+
+  return [date1, date2];
+};
 
 const duration = (timeTo, timeFrom) => {
   const date1 = dayjs(timeTo);
@@ -42,7 +41,6 @@ const getOffer = (offers, data) => {
 
   data.forEach((element) => {
     offers.forEach((item) => {
-
       if (element.id === item) {
         result.push(element);
       }
@@ -53,4 +51,4 @@ const getOffer = (offers, data) => {
   return result;
 };
 
-export { isEscapeKey, getRandomInteger, getRandomItemArray, showDate, showMachineDate, showTime, showMachineTime, duration, getOffer, showDateFormEditing };
+export { showDate, showMachineDate, showTime, showMachineTime, duration, getOffer, showDateFormEditing, generateDate };

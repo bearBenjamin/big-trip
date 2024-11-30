@@ -1,6 +1,13 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-const createSortFormTemplate = () => `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+const createSortFormTemplate = (points) => {
+  const classStatus = { formClass: null };
+
+  if (points.length === 0) {
+    classStatus.formClass = 'visually-hidden';
+  }
+
+  return `<form class="trip-events__trip-sort  trip-sort ${classStatus.formClass}" action="#" method="get">
   <div class="trip-sort__item  trip-sort__item--day">
   <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day">
   <label class="trip-sort__btn" for="sort-day">Day</label>
@@ -26,11 +33,18 @@ const createSortFormTemplate = () => `<form class="trip-events__trip-sort  trip-
   <label class="trip-sort__btn" for="sort-offer">Offers</label>
   </div>
   </form>`;
+};
 
 export default class SortFormView extends AbstractView {
+  #points = null;
+
+  constructor (points) {
+    super();
+    this.#points = points;
+  }
 
   get template () {
-    return createSortFormTemplate();
+    return createSortFormTemplate(this.#points);
   }
 
 }

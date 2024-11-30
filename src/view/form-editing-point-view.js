@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { generateOffers } from '../mock/data.js';
-import { getOffer, showDateFormEditing } from '../util.js';
+import { getOffer, showDateFormEditing } from '../util/util.js';
 
 const createFormEditingPointTemplate = (point, descriptions) => {
   const { type, destination, dateFrom, dateTo, basePrice, offers } = point;
